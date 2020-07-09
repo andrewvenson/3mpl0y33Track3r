@@ -5,7 +5,7 @@
     "main": "server.js",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
-        "start": "mysql -u root -p < test.sql && node server.js"
+        "start": "echo 'enter mysql password' && mysql -u root -p < empddlseed.sql && echo 'enter mysql password' && mysql -u root -p < empddmseed.sql && node server.js"
     },
     "author": "",
     "license": "ISC",
