@@ -1,0 +1,16 @@
+{
+    "name": "empl0y33track3r",
+    "version": "1.0.0",
+    "description": "",
+    "main": "server.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "start": "mysql -u root -p < test.sql && node server.js"
+    },
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "inquirer": "^7.3.0",
+        "mysql": "^2.18.1"
+    }
+}
