@@ -4,8 +4,14 @@ const mysql = require("mysql");
 const connection = mysql.createConnection({
     host: "localhost",
     user: "root",
-    password: "",
+    password: `${process.env.MYSQL_PW}`,
     database: "employeetracker"
+});
+
+connection.connect(err => {
+    if (err) throw err;
+    console.log("mysql connected");
+    main();
 });
 
 const main = () => {

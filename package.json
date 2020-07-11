@@ -5,12 +5,15 @@
     "main": "server.js",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
-        "start": "echo 'enter mysql password' && mysql -u root -p < empddlseed.sql && echo 'enter mysql password again' && mysql -u root -p < empddmseed.sql && node server.js"
+        "start": "echo 'enter mysql password' && mysql -u root -p < empddlseed.sql && echo 'enter mysql password again' && mysql -u root -p < empddmseed.sql && node bin/dev"
     },
     "author": "",
     "license": "ISC",
     "dependencies": {
         "inquirer": "^7.3.0",
         "mysql": "^2.18.1"
+    },
+    "devDependencies": {
+        "dotenv": "^8.2.0"
     }
 }
