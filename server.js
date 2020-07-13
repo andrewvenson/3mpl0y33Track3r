@@ -112,6 +112,25 @@ const view = categ => {
                 });
             }
 
+            function managerPromise(query) {
+                return new Promise((resolve, reject) => {
+                    connection.query(
+                        `Select first_name, last_name from employees where employee_id = ${query}`,
+                        (err, res) => {
+                            if (err) throw err;
+
+                            if (query === null) {
+                                resolve("none");
+                            } else {
+                                resolve(
+                                    `${res[0].first_name} ${res[0].last_name}`
+                                );
+                            }
+                        }
+                    );
+                });
+            }
+
             let newData = [];
 
             connection.query("Select * from employees;", (err, res) => {
@@ -119,11 +138,15 @@ const view = categ => {
                 Promise.all(
                     res.map((row, index) => {
                         return rolePromise(row.role_id).then(response => {
-                            newData.push({
-                                id: row.employee_id,
-                                first_name: row.first_name,
-                                last_name: row.last_name,
-                                title: response
+                            return managerPromise(row.manager_id).then(resp => {
+                                newData.push({
+                                    id: row.employee_id,
+                                    first_name: row.first_name,
+                                    last_name: row.last_name,
+                                    title: response,
+                                    salary: row.salary,
+                                    manager: resp
+                                });
                             });
                         });
                     })
