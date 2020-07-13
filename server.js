@@ -15,29 +15,112 @@ connection.connect(err => {
 });
 
 const main = () => {
-    inquirer.prompt([]).then(res => {});
+    inquirer
+        .prompt([
+            {
+                name: "option",
+                type: "list",
+                message: "Choose option",
+                choices: [
+                    "View/Add/Del Departments",
+                    "View/Add/Del Roles",
+                    "View/Add/Del Employees",
+                    "Update Employee Roles",
+                    "Update Employee Managers",
+                    "View Employees by Manager",
+                    "View Budget"
+                ]
+            }
+        ])
+        .then(res => {
+            console.log(res.option);
+            switch (res.option) {
+                case "View/Add/Del Departments":
+                    dept("dept");
+                    break;
+                case "View/Add/Del Roles":
+                    role("role");
+                    break;
+                case "View/Add/Del Employees":
+                    emp("emp");
+                    break;
+                case "Update Employee Roles":
+                    empRole();
+                    break;
+                case "Update Employee Managers":
+                    updateMgr();
+                    break;
+                case "View Employees by Manager":
+                    viewEmpByMgr();
+                    break;
+                case "View Budget":
+                    viewBudg();
+                    break;
+                default:
+                    main();
+            }
+        });
 };
 
-const addDept = () => {};
+const viewAddDel = {
+    name: "type",
+    type: "list",
+    message: "View, Add or Delete?",
+    choices: ["View", "Add", "Delete", "Exit"]
+};
 
-const addRole = () => {};
+const del = categ => {
+    console.log("deleting", categ);
+};
 
-const addEmp = () => {};
+const add = categ => {
+    console.log("adding", categ);
+};
 
-const viewDep = () => {};
+const view = categ => {
+    console.log("viewing", categ);
+};
 
-const viewRole = () => {};
+const switchCategory = (res, categ) => {
+    switch (res.type) {
+        case "View":
+            view(categ);
+            break;
+        case "Add":
+            add(categ);
+            break;
+        case "Delete":
+            del(categ);
+            break;
+        case "Exit":
+            main();
+        default:
+            main();
+    }
+};
 
-const viewEmp = () => {};
+const dept = categ => {
+    inquirer.prompt([viewAddDel]).then(res => {
+        switchCategory(res, categ);
+    });
+};
+
+const role = categ => {
+    inquirer.prompt([viewAddDel]).then(res => {
+        switchCategory(res, categ);
+    });
+};
+
+const emp = categ => {
+    inquirer.prompt([viewAddDel]).then(res => {
+        switchCategory(res, categ);
+    });
+};
+
+const empRole = () => {};
 
 const updateMgr = () => {};
 
 const viewEmpByMgr = () => {};
 
-const delDep = () => {};
-
-const delRole = () => {};
-
-const delEmp = () => {};
-
-const viewBud = () => {};
+const viewBudg = () => {};
