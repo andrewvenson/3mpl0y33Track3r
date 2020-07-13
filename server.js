@@ -70,15 +70,74 @@ const viewAddDel = {
 };
 
 const del = categ => {
-    console.log("deleting", categ);
+    switch (categ) {
+        case "emp":
+            break;
+        case "dept":
+            break;
+        case "role":
+            break;
+        default:
+            del(categ);
+    }
+    main();
 };
 
 const add = categ => {
-    console.log("adding", categ);
+    switch (categ) {
+        case "emp":
+            break;
+        case "dept":
+            break;
+        case "role":
+            break;
+        default:
+            add(categ);
+    }
+    main();
 };
 
 const view = categ => {
-    console.log("viewing", categ);
+    switch (categ) {
+        case "emp":
+            function rolePromise(query) {
+                return new Promise((resolve, reject) => {
+                    connection.query(
+                        `Select title from role where role_id = ${query}`,
+                        (err, res) => {
+                            if (err) reject(err);
+                            resolve(res[0].title);
+                        }
+                    );
+                });
+            }
+
+            let newData = [];
+
+            connection.query("Select * from employees;", (err, res) => {
+                if (err) throw err;
+                Promise.all(
+                    res.map((row, index) => {
+                        return rolePromise(row.role_id).then(response => {
+                            newData.push({
+                                id: row.employee_id,
+                                first_name: row.first_name,
+                                last_name: row.last_name,
+                                title: response
+                            });
+                        });
+                    })
+                ).then(() => console.table(newData));
+            });
+
+            break;
+        case "dept":
+            break;
+        case "role":
+            break;
+        default:
+            view(categ);
+    }
 };
 
 const switchCategory = (res, categ) => {
@@ -92,8 +151,6 @@ const switchCategory = (res, categ) => {
         case "Delete":
             del(categ);
             break;
-        case "Exit":
-            main();
         default:
             main();
     }
