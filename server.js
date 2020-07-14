@@ -92,8 +92,19 @@ const add = categ => {
                     resolve(res);
                 });
             });
+            let managerPromise = new Promise((resolve, reject) => {
+                connection.query(
+                    `Select first_name, last_name from employees`,
+                    (err, res) => {
+                        if (err) reject(err);
+                        resolve(res);
+                    }
+                );
+            });
             const employeePrompt = async () => {
                 const roles = await rolePromise;
+                const managers = await managerPromise;
+
                 inquirer
                     .prompt([
                         {
@@ -112,6 +123,14 @@ const add = categ => {
                             message: "Employee's Role: ",
                             choices: roles.map(role => {
                                 return role.title;
+                            })
+                        },
+                        {
+                            name: "manager",
+                            type: "list",
+                            message: "Employee's Manager: ",
+                            choices: managers.map(manager => {
+                                return `${manager.first_name} ${manager.last_name}`;
                             })
                         },
                         {
