@@ -153,7 +153,7 @@ const add = categ => {
                             }';`,
                             (error, resp) => {
                                 let manager_id;
-                                if (res.managers === "None") {
+                                if (res.manager === "None") {
                                     manager_id = null;
                                 } else {
                                     manager_id = resp[0].employee_id;
@@ -232,6 +232,24 @@ const add = categ => {
                     ])
                     .then(res => {
                         console.log(res);
+                        connection.query(
+                            `Select dept_id from department where name = '${res.dept}'`,
+                            (err, response) => {
+                                if (err) throw err;
+                                connection.query(
+                                    `Insert into role set ?`,
+                                    {
+                                        title: res.role,
+                                        dept_id: response[0].dept_id
+                                    },
+                                    (err, respo) => {
+                                        if (err) throw err;
+                                        console.log("Role added successfully");
+                                        main();
+                                    }
+                                );
+                            }
+                        );
                     });
             });
             break;
