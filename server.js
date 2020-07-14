@@ -129,9 +129,11 @@ const add = categ => {
                             name: "manager",
                             type: "list",
                             message: "Employee's Manager: ",
-                            choices: managers.map(manager => {
-                                return `${manager.first_name} ${manager.last_name}`;
-                            })
+                            choices: managers
+                                .map(manager => {
+                                    return `${manager.first_name} ${manager.last_name}`;
+                                })
+                                .concat(["None"])
                         },
                         {
                             name: "salary",
