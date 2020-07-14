@@ -162,6 +162,10 @@ const view = categ => {
 
             break;
         case "dept":
+            connection.query(`Select * from department`, (err, res) => {
+                if (err) throw err;
+                console.table(res);
+            });
             break;
         case "role":
             break;
