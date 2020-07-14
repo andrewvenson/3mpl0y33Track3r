@@ -157,7 +157,10 @@ const view = categ => {
                             });
                         });
                     })
-                ).then(() => console.table(newData));
+                ).then(() => {
+                    console.table(newData);
+                    main();
+                });
             });
 
             break;
@@ -165,9 +168,38 @@ const view = categ => {
             connection.query(`Select * from department`, (err, res) => {
                 if (err) throw err;
                 console.table(res);
+                main();
             });
             break;
         case "role":
+            const deptPromise = query => {
+                return new Promise((resolve, reject) => {
+                    connection.query(
+                        `Select name from department where dept_id = ${query};`,
+                        (err, res) => {
+                            if (err) reject(err);
+                            resolve(res[0].name);
+                        }
+                    );
+                });
+            };
+
+            let newRay = [];
+
+            connection.query(`Select * from role;`, (err, res) => {
+                if (err) throw err;
+                Promise.all(
+                    res.map(row => {
+                        return deptPromise(row.dept_id).then(response => {
+                            newRay.push({
+                                role_id: row.role_id,
+                                title: row.title,
+                                department: response
+                            });
+                        });
+                    })
+                ).then(() => console.table(newRay));
+            });
             break;
         default:
             view(categ);
