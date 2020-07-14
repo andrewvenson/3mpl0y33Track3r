@@ -404,7 +404,68 @@ const emp = categ => {
     });
 };
 
-const empRole = () => {};
+const empRole = () => {
+    connection.query(
+        "Select first_name, last_name from employees",
+        (error, response) => {
+            if (error) throw error;
+            let employees = response.map(emp => {
+                return `${emp.first_name} ${emp.last_name}`;
+            });
+
+            connection.query("Select title from role", (err, res) => {
+                if (err) throw err;
+                const roles = res.map(role => {
+                    return role.title;
+                });
+
+                inquirer
+                    .prompt([
+                        {
+                            type: "list",
+                            message: "Select Employee",
+                            name: "emp",
+                            choices: employees
+                        },
+                        {
+                            type: "list",
+                            message: "Select New Role",
+                            name: "role",
+                            choices: roles
+                        }
+                    ])
+                    .then(resp => {
+                        connection.query(
+                            `Select role_id from role where title = '${resp.role}';`,
+                            (err, roleresponse) => {
+                                if (err) throw err;
+                                connection.query(
+                                    `Update employees set ? where first_name = '${
+                                        resp.emp.split(" ")[0]
+                                    }' && last_name = '${
+                                        resp.emp.split(" ")[2] !== undefined
+                                            ? resp.emp.split(" ")[1] +
+                                              " " +
+                                              resp.emp.split(" ")[2]
+                                            : resp.emp.split(" ")[1]
+                                    }' `,
+                                    { role_id: roleresponse[0].role_id },
+                                    (err, res) => {
+                                        if (err) throw err;
+                                        console.log(
+                                            "Employee role successfully updated"
+                                        );
+
+                                        main();
+                                    }
+                                );
+                            }
+                        );
+                    });
+            });
+        }
+    );
+};
 
 const updateMgr = () => {};
 
