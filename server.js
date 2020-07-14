@@ -146,7 +146,7 @@ const view = categ => {
                         return rolePromise(row.role_id).then(response => {
                             return managerPromise(row.manager_id).then(resp => {
                                 newData.push({
-                                    id: row.employee_id,
+                                    employee_id: row.employee_id,
                                     first_name: row.first_name,
                                     last_name: row.last_name,
                                     title: response[0],
@@ -198,7 +198,10 @@ const view = categ => {
                             });
                         });
                     })
-                ).then(() => console.table(newRay));
+                ).then(() => {
+                    console.table(newRay);
+                    main();
+                });
             });
             break;
         default:
