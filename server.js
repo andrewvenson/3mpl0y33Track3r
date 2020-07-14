@@ -94,7 +94,7 @@ const add = categ => {
             });
             let managerPromise = new Promise((resolve, reject) => {
                 connection.query(
-                    `Select first_name, last_name from employees`,
+                    `Select first_name, last_name, employee_id from employees`,
                     (err, res) => {
                         if (err) reject(err);
                         resolve(res);
@@ -104,7 +104,6 @@ const add = categ => {
             const employeePrompt = async () => {
                 const roles = await rolePromise;
                 const managers = await managerPromise;
-
                 inquirer
                     .prompt([
                         {
@@ -142,8 +141,49 @@ const add = categ => {
                         }
                     ])
                     .then(res => {
-                        console.log(res);
-                        main();
+                        connection.query(
+                            `Select employee_id from employees where first_name='${
+                                res.manager.split(" ")[0]
+                            }' && last_name='${
+                                res.manager.split(" ")[2] !== undefined
+                                    ? res.manager.split(" ")[1] +
+                                      " " +
+                                      res.manager.split(" ")[2]
+                                    : res.manager.split(" ")[1]
+                            }';`,
+                            (error, resp) => {
+                                let manager_id;
+                                if (res.managers === "None") {
+                                    manager_id = null;
+                                } else {
+                                    manager_id = resp[0].employee_id;
+                                }
+
+                                connection.query(
+                                    `Select role_id from role where title = '${res.role}'`,
+                                    (err, response) => {
+                                        if (err) throw err;
+                                        connection.query(
+                                            "Insert into employees set ?",
+                                            {
+                                                first_name: res.first_name,
+                                                last_name: res.last_name,
+                                                role_id: response[0].role_id,
+                                                salary: res.salary,
+                                                manager_id: manager_id
+                                            },
+                                            (err, res) => {
+                                                if (err) throw err;
+                                                console.log(
+                                                    "Employee added successfully"
+                                                );
+                                                main();
+                                            }
+                                        );
+                                    }
+                                );
+                            }
+                        );
                     });
             };
             employeePrompt();
