@@ -86,6 +86,46 @@ const del = categ => {
 const add = categ => {
     switch (categ) {
         case "emp":
+            let rolePromise = new Promise((resolve, reject) => {
+                connection.query(`Select title from role`, (err, res) => {
+                    if (err) reject(err);
+                    resolve(res);
+                });
+            });
+            const employeePrompt = async () => {
+                const roles = await rolePromise;
+                inquirer
+                    .prompt([
+                        {
+                            name: "first_name",
+                            type: "input",
+                            message: "Employee's First Name: "
+                        },
+                        {
+                            name: "last_name",
+                            type: "input",
+                            message: "Employee's Last Name: "
+                        },
+                        {
+                            name: "role",
+                            type: "list",
+                            message: "Employee's Role: ",
+                            choices: roles.map(role => {
+                                return role.title;
+                            })
+                        },
+                        {
+                            name: "salary",
+                            type: "input",
+                            message: "Employee's Salary: "
+                        }
+                    ])
+                    .then(res => {
+                        console.log(res);
+                        main();
+                    });
+            };
+            employeePrompt();
             break;
         case "dept":
             break;
@@ -94,7 +134,6 @@ const add = categ => {
         default:
             add(categ);
     }
-    main();
 };
 
 const view = categ => {
