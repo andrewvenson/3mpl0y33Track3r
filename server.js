@@ -22,9 +22,9 @@ const main = () => {
                 type: "list",
                 message: "Choose option",
                 choices: [
+                    "View/Add/Del Employees",
                     "View/Add/Del Departments",
                     "View/Add/Del Roles",
-                    "View/Add/Del Employees",
                     "Update Employee Roles",
                     "Update Employee Managers",
                     "View Employees by Manager",
@@ -103,10 +103,16 @@ const view = categ => {
             function rolePromise(query) {
                 return new Promise((resolve, reject) => {
                     connection.query(
-                        `Select title from role where role_id = ${query}`,
+                        `Select title, dept_id from role where role_id = ${query}`,
                         (err, res) => {
                             if (err) reject(err);
-                            resolve(res[0].title);
+                            connection.query(
+                                `Select name from department where dept_id = ${res[0].dept_id}`,
+                                (error, response) => {
+                                    if (error) reject(error);
+                                    resolve([res[0].title, response[0].name]);
+                                }
+                            );
                         }
                     );
                 });
@@ -143,7 +149,8 @@ const view = categ => {
                                     id: row.employee_id,
                                     first_name: row.first_name,
                                     last_name: row.last_name,
-                                    title: response,
+                                    title: response[0],
+                                    department: response[1],
                                     salary: row.salary,
                                     manager: resp
                                 });
