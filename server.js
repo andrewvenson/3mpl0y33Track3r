@@ -189,8 +189,51 @@ const add = categ => {
             employeePrompt();
             break;
         case "dept":
+            inquirer
+                .prompt([
+                    {
+                        type: "input",
+                        message: "Enter Department Name: ",
+                        name: "dept"
+                    }
+                ])
+                .then(res => {
+                    connection.query(
+                        `insert into department set ?`,
+                        { name: res.dept },
+                        (err, response) => {
+                            if (err) throw err;
+                            console.log("Department added successfully");
+                            main();
+                        }
+                    );
+                });
             break;
         case "role":
+            connection.query("Select name from department;", (err, resp) => {
+                if (err) throw err;
+                let deps = resp.map(dep => {
+                    return dep.name;
+                });
+
+                inquirer
+                    .prompt([
+                        {
+                            type: "input",
+                            message: "Enter Role Name: ",
+                            name: "role"
+                        },
+                        {
+                            type: "list",
+                            message: "Select Department",
+                            name: "dept",
+                            choices: deps
+                        }
+                    ])
+                    .then(res => {
+                        console.log(res);
+                    });
+            });
             break;
         default:
             add(categ);
