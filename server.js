@@ -22,12 +22,10 @@ const main = () => {
                 type: "list",
                 message: "Choose option",
                 choices: [
-                    "View/Add/Del Employees",
-                    "View/Add/Del Departments",
-                    "View/Add/Del Roles",
+                    "View/Add Employees",
+                    "View/Add Departments",
+                    "View/Add Roles",
                     "Update Employee Roles",
-                    "Update Employee Managers",
-                    "View Employees by Manager",
                     "View Budget"
                 ]
             }
@@ -35,23 +33,17 @@ const main = () => {
         .then(res => {
             console.log(res.option);
             switch (res.option) {
-                case "View/Add/Del Departments":
+                case "View/Add Departments":
                     dept("dept");
                     break;
-                case "View/Add/Del Roles":
+                case "View/Add Roles":
                     role("role");
                     break;
-                case "View/Add/Del Employees":
+                case "View/Add Employees":
                     emp("emp");
                     break;
                 case "Update Employee Roles":
                     empRole();
-                    break;
-                case "Update Employee Managers":
-                    updateMgr();
-                    break;
-                case "View Employees by Manager":
-                    viewEmpByMgr();
                     break;
                 case "View Budget":
                     viewBudg();
@@ -62,25 +54,11 @@ const main = () => {
         });
 };
 
-const viewAddDel = {
+const viewAdd = {
     name: "type",
     type: "list",
-    message: "View, Add or Delete?",
-    choices: ["View", "Add", "Delete", "Exit"]
-};
-
-const del = categ => {
-    switch (categ) {
-        case "emp":
-            break;
-        case "dept":
-            break;
-        case "role":
-            break;
-        default:
-            del(categ);
-    }
-    main();
+    message: "View or Add?",
+    choices: ["View", "Add", "Exit"]
 };
 
 const add = categ => {
@@ -231,7 +209,6 @@ const add = categ => {
                         }
                     ])
                     .then(res => {
-                        console.log(res);
                         connection.query(
                             `Select dept_id from department where name = '${res.dept}'`,
                             (err, response) => {
@@ -378,28 +355,25 @@ const switchCategory = (res, categ) => {
         case "Add":
             add(categ);
             break;
-        case "Delete":
-            del(categ);
-            break;
         default:
             main();
     }
 };
 
 const dept = categ => {
-    inquirer.prompt([viewAddDel]).then(res => {
+    inquirer.prompt([viewAdd]).then(res => {
         switchCategory(res, categ);
     });
 };
 
 const role = categ => {
-    inquirer.prompt([viewAddDel]).then(res => {
+    inquirer.prompt([viewAdd]).then(res => {
         switchCategory(res, categ);
     });
 };
 
 const emp = categ => {
-    inquirer.prompt([viewAddDel]).then(res => {
+    inquirer.prompt([viewAdd]).then(res => {
         switchCategory(res, categ);
     });
 };
@@ -467,8 +441,11 @@ const empRole = () => {
     );
 };
 
-const updateMgr = () => {};
-
-const viewEmpByMgr = () => {};
-
-const viewBudg = () => {};
+const viewBudg = () => {
+    connection.query("Select salary from employees", (err, res) => {
+        let budget = 0;
+        res.forEach(sal => (budget += parseInt(sal.salary)));
+        console.log(`Total utilized budget is ${budget}`);
+        main();
+    });
+};
