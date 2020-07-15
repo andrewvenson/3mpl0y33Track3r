@@ -3,7 +3,7 @@ const mysql = require("mysql");
 
 const connection = mysql.createConnection({
     host: "localhost",
-    user: "root",
+    user: `${process.env.MYSQL_UN}`,
     password: `${process.env.MYSQL_PW}`,
     database: "employeetracker"
 });
