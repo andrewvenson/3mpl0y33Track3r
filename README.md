@@ -34,7 +34,14 @@ Rename the 'rename.env' file to '.env' and then enter mysql credentials in this 
  MYSQL_PW=<enter mysql pw here>
  MYSQL_UN=<enter mysql username here>
 ```
- 
+
+If MySQL username is not root make sure to update username in package.json start script like so
+
+```
+// only change where it says root to your mysql username, if your username is not root
+"start": "echo 'enter mysql password' && mysql -u root -p < empddlseed.sql && echo 'enter mysql password again' && mysql -u root -p < empddmseed.sql && node bin/dev"
+```
+
 ```
 // run npm start in root directory
 npm start
