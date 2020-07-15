@@ -445,7 +445,7 @@ const viewBudg = () => {
     connection.query("Select salary from employees", (err, res) => {
         let budget = 0;
         res.forEach(sal => (budget += parseInt(sal.salary)));
-        console.log(`Total utilized budget is ${budget}`);
+        console.log(`Total utilized budget is ${budget}.`);
         main();
     });
 };
