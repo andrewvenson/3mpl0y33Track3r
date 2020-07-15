@@ -26,7 +26,8 @@ const main = () => {
                     "View/Add Departments",
                     "View/Add Roles",
                     "Update Employee Roles",
-                    "View Budget"
+                    "View Budget",
+                    "Exit"
                 ]
             }
         ])
@@ -47,6 +48,9 @@ const main = () => {
                     break;
                 case "View Budget":
                     viewBudg();
+                    break;
+                case "Exit":
+                    console.log("Good bye");
                     break;
                 default:
                     main();
